@@ -74,11 +74,11 @@ jobs:
 
       ## Upload build and comment PR if not merging into develop
       - name: Set filename prefix
-        if: ${{ MERGING == false }}
+        if: ${{ env.MERGING == false }}
         run: echo "FILENAME_PREFIX=$(echo ${{ env.FILENAME }}  | tr / -)" >> $GITHUB_ENV
 
       - name: Create chrome zip
-        if: ${{ MERGING == false }}
+        if: ${{ env.MERGING == false }}
         run: |
           cd packages/extension/dist
           zip -r ${{ env.FILENAME_PREFIX }}-chrome.zip ./*
@@ -86,11 +86,11 @@ jobs:
           cd ../../../
 
       - name: Build Firefox version
-        if: ${{ MERGING == false }}
+        if: ${{ env.MERGING == false }}
         run: MANIFEST_VERSION=v2 yarn --cwd packages/extension build
 
       - name: Create firefox zip
-        if: ${{ MERGING == false }}
+        if: ${{ env.MERGING == false }}
         run: |
           cd packages/extension/dist
           zip -r ${{ env.FILENAME_PREFIX }}-firefox.zip ./*
@@ -98,11 +98,11 @@ jobs:
           cd ../../../
 
       - name: Check bundlesize for firefox
-        if: ${{ MERGING == false }}
+        if: ${{ env.MERGING == false }}
         run: yarn run bundlewatch
 
       - name: Upload artifacts for firefox
-        if: ${{ MERGING == false }}
+        if: ${{ env.MERGING == false }}
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.FILENAME_PREFIX }}-firefox.zip
@@ -110,7 +110,7 @@ jobs:
           retention-days: 5
 
       - name: Upload artifacts for chrome
-        if: ${{ MERGING == false }}
+        if: ${{ env.MERGING == false }}
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.FILENAME_PREFIX }}-chrome.zip
@@ -118,11 +118,11 @@ jobs:
           retention-days: 5
 
       - name: Set GHA_BRANCH
-        if: ${{ MERGING == false }}
+        if: ${{ env.MERGING == false }}
         run: echo "GHA_BRANCH=$(echo $GITHUB_REF | awk -F / '{print $3}')" >> $GITHUB_ENV
 
       - name: comment PR
-        if: ${{ MERGING == false }}
+        if: ${{ env.MERGING == false }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           INPUT_REPO: ${{ env.GHA_BRANCH }}
